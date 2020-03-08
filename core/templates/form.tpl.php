@@ -6,7 +6,7 @@
     <?php endif; ?>
     <form <?php print html_attr(($form['attr'] ?? []) + ['method' => 'POST']); ?>>
         <?php foreach ($form['fields'] ?? [] as $field_id => $field): ?>
-            <div class="field">
+            <div class="field" <?php print html_attr(($field['extras']['attr'] ?? [])); ?>>
                 <label>
                     <span><?php print $field['label']; ?></span>
                     <?php if (in_array($field['type'], ['text', 'password', 'email', 'number'])): ?>
@@ -15,6 +15,9 @@
                         <textarea <?php print textarea_attr($field, $field_id); ?>><?php print $field['value'] ?? ''; ?></textarea>
                     <?php elseif (in_array($field['type'], ['select'])): ?>
                         <select <?php print select_attr($field, $field_id); ?>>
+                            <?php if (isset($field['placeholder'])): ?>
+                                <option disabled selected><?php print $field['placeholder']; ?></option>
+                            <?php endif; ?>
                             <?php foreach ($field['options'] ?? [] as $index => $option): ?>
                                 <option <?php print option_attr($field, $index); ?>><?php print $option; ?></option>
                             <?php endforeach; ?>
@@ -38,3 +41,22 @@
     </form>
 </div>
 
+<script>
+    const select = document.querySelector('select');
+    const input = document.querySelector('input[name="username"]');
+    const button = document.querySelector('.join_btn');
+
+    button.className = 'hidden';
+    input.parentElement.parentElement.className = 'hidden';
+
+    if (select.value != 'Pasirinkite komanda') {
+        button.className = 'field';
+        input.parentElement.parentElement.className = 'field';
+    } else {
+        select.addEventListener('change', function (event) {
+            input.parentElement.parentElement.className = (this.value != false || this.value == 0) ? 'field' : 'hidden';
+            button.className = (this.value != false || this.value == 0) ? 'field' : 'hidden';
+        })
+    }
+    ;
+</script>

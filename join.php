@@ -14,31 +14,24 @@ function form_success($safe_input, &$form)
     setcookie('user', json_encode($safe_input), time() + 3600, '/');
 }
 
-/**
- * F-cija, kuri ivyks, kai forma neatitiks nors vieno reikalavimo
- */
-function form_fail($safe_input, $form)
-{
-
-}
-
 $form = [
     'attr' => [
         'action' => '/join.php',
         'method' => 'POST',
         'class' => 'my-form',
-        'id' => 'form-id'
+        'id' => 'join_form'
     ],
     'fields' => [
         'team' => [
             'label' => 'Komandos pavadinimas',
             'type' => 'select',
+            'placeholder' => 'Pasirinkite komanda',
             'validate' => [
                 'validate_selected'
             ]
         ],
         'username' => [
-            'label' => 'Your nick',
+            'label' => 'Tavo slapyvardis',
             'type' => 'text',
             'placeholder' => 'Bibiagalvis',
             'validate' => [
@@ -54,6 +47,11 @@ $form = [
         'submit' => [
             'title' => 'Prisijungti',
             'value' => 'submit',
+            'extras' => [
+                'attr' => [
+                    'class' => 'join_btn'
+                ]
+            ]
         ]
     ],
     'validators' => [
@@ -61,29 +59,25 @@ $form = [
     ],
     'callbacks' => [
         'success' => 'form_success',
-        'fail' => 'form_fail'
     ]
 ];
 
-if ($_POST) {
-    $sanitized_items = get_filtered_input($form);
-    validate_form($form, $sanitized_items);
-}
-
-//Uzpildome dropdowna esanciomis komandomis
 $existing = file_to_array(TEAMS_FILE);
-
-foreach ($existing ?? [] as $item) {
-    $form['fields']['team']['options'][] = $item['name'];
-}
-
-///
 
 //Tikriname userio slapuka, jeigu jis yra spausdiname teksta
 if (isset($_COOKIE['user'])) {
     $decoded_data = json_decode($_COOKIE['user'], true);
-    $team = $existing[$decoded_data['team']]['name'];
+    $team = $existing[$decoded_data['team']]['team_id'];
     $h1 = "Zdarova pzdaballs zaidejau - \"{$decoded_data['username']}\". Jau esi komandoje - \"{$team}\"";
+} else {
+    if ($_POST) {
+        $sanitized_items = get_filtered_input($form);
+        validate_form($form, $sanitized_items);
+    }
+
+    foreach ($existing ?? [] as $item) {
+        $form['fields']['team']['options'][] = $item['team_id'];
+    }
 }
 ?>
 <html>

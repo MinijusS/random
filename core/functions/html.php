@@ -99,9 +99,11 @@ function option_attr(array $field, $option_id)
     $attr = [
         'value' => $option_id ?? ''
     ];
-    if (($field['value'] ?? null) == $option_id) {
+
+    if (isset($field['value']) && $field['value'] == $option_id) {
         $attr['selected'] = true;
     }
+
     return html_attr($attr);
 }
 

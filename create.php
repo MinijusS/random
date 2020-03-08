@@ -12,14 +12,6 @@ function form_success($safe_input, &$form)
     $form['success'] = 'Komanda sekmingai sukurta!';
 }
 
-/**
- * F-cija, kuri ivyks, kai forma neatitiks nors vieno reikalavimo
- */
-function form_fail($safe_input, $form)
-{
-
-}
-
 $form = [
     'attr' => [
         'action' => '/create.php',
@@ -28,7 +20,7 @@ $form = [
         'id' => 'form-id'
     ],
     'fields' => [
-        'name' => [
+        'team_id' => [
             'label' => 'Komandos pavadinimas',
             'type' => 'text',
             'placeholder' => 'Barsukai',
@@ -51,7 +43,6 @@ $form = [
     'validators' => [],
     'callbacks' => [
         'success' => 'form_success',
-        'fail' => 'form_fail'
     ]
 ];
 
