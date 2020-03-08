@@ -34,3 +34,20 @@ function validate_form(&$form, $input): void
         }
     }
 }
+
+/**
+ * F-cija, kuri patikrina ar buvo nusiusta forma koks mygtukas buvo nuspaustas
+ * @param array $form siunciame formos masyva
+ */
+function pressed_button(array &$form)
+{
+    if ($_POST) {
+        if ($_POST['action'] == 'submit') {
+            $sanitized_items = get_filtered_input($form);
+            validate_form($form, $sanitized_items);
+            // do something when the submit button is pressed.
+        } elseif($_POST['action'] == 'update') {
+            //do something when the update button is pressed.
+        }
+    }
+}

@@ -35,17 +35,8 @@ $form = [
     ]
 ];
 
-//SUBMIT MYGTUKO PASPAUDIMU
-if ($_POST && $_POST['action'] == 'submit') {
-    $sanitized_items = get_filtered_input($form);
-    validate_form($form, $sanitized_items);
-    foreach ($form['fields'] as $field) {
-        if (isset($field['errors'])) {
-            print 'Yra erroru';
-            break;
-        }
-    }
-}
+//Funkcija tikrinanti mygtuko paspaudima
+pressed_button($form);
 ?>
 <html>
 <head>

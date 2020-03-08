@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="574c65a4-6676-4a2a-8048-4dfe9ea29b01" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/functions/form/core.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/functions/form/core.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +59,8 @@
       <workItem from="1583655938563" duration="8589000" />
       <workItem from="1583654690212" duration="8310000" />
       <workItem from="1583657238184" duration="6856000" />
-      <workItem from="1583670827997" duration="2599000" />
+      <workItem from="1583670827997" duration="2863000" />
+      <workItem from="1583677092981" duration="995000" />
     </task>
     <servers />
   </component>
@@ -75,12 +78,13 @@
       <screen x="0" y="23" width="1280" height="725" />
     </state>
     <state x="100" y="123" width="1080" height="525" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1280.725/1280.-808.1920.1057@0.23.1280.725" timestamp="1583665180399" />
-    <state x="1756" y="-524" key="com.intellij.ide.util.TipDialog" timestamp="1583670869952">
-      <screen x="1280" y="-808" width="1920" height="1057" />
+    <state x="317" y="218" key="com.intellij.ide.util.TipDialog" timestamp="1583677092884">
+      <screen x="0" y="23" width="1280" height="725" />
     </state>
     <state x="317" y="218" key="com.intellij.ide.util.TipDialog/0.23.1280.725/-272.-1057.1920.1057@0.23.1280.725" timestamp="1583668165238" />
     <state x="317" y="218" key="com.intellij.ide.util.TipDialog/0.23.1280.725/1280.-808.1920.1057@0.23.1280.725" timestamp="1583657238821" />
     <state x="1756" y="-524" key="com.intellij.ide.util.TipDialog/0.23.1280.725/1280.-808.1920.1057@1280.-808.1920.1057" timestamp="1583670869952" />
+    <state x="317" y="218" key="com.intellij.ide.util.TipDialog/0.23.1280.725@0.23.1280.725" timestamp="1583677092884" />
     <state x="305" y="72" width="670" height="676" key="search.everywhere.popup" timestamp="1583664785074">
       <screen x="0" y="23" width="1280" height="725" />
     </state>
