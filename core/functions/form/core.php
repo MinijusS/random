@@ -20,34 +20,89 @@ function get_filtered_input(array $form): array
 }
 
 /**
- * F-cija, kuri patikrina, ar nera tusciu langeliu
- * @param $form siunciame pacia forma, o tada ja susigraziname su &
- * @param $input siunciame prafiltruota inputa
+ * F-cija, kuri tikrina pacia forma
+ * @param $form siunciame forma, kuria naudosime
+ * @param $safe_input siunciame jau prafiltruotus laukelius, pagal kuriuos tikrinsim
  */
-function validate_form(&$form, $input): void
+function validate_form(&$form, $safe_input): bool
 {
-    foreach ($input as $input_index => $field) {
-        if ($field === '') {
-            $form['fields'][$input_index]['errors'] = 'Prasome uzpildyt si laukeli!';
-        } else {
-            $form['fields'][$input_index]['value'] = $_POST[$input_index];
+    $success = true;
+    foreach ($safe_input as $input_index => $value) {
+        $field = &$form['fields'][$input_index];
+        $field['value'] = $safe_input[$input_index];
+        foreach ($field['validate'] ?? [] as $validate) {
+            $is_valid = $validate($value, $field);
+            if (!$is_valid) {
+                $success = false;
+                break;
+            }
         }
     }
+    return $success;
 }
 
 /**
- * F-cija, kuri patikrina ar buvo nusiusta forma koks mygtukas buvo nuspaustas
- * @param array $form siunciame formos masyva
+ * F-cija, tikrinanti ar laukelis netuscias
+ * @param $field_input siunciam ivesta laukeli
+ * @param $field parasom i formos masyvo laukelio errora
+ * @return bool graziname erroro booleana, kuris veliau pagelbes
  */
-function pressed_button(array &$form)
+function validate_not_empty($field_input, array &$field): bool
 {
-    if ($_POST) {
-        if ($_POST['action'] == 'submit') {
-            $sanitized_items = get_filtered_input($form);
-            validate_form($form, $sanitized_items);
-            // do something when the submit button is pressed.
-        } elseif($_POST['action'] == 'update') {
-            //do something when the update button is pressed.
-        }
+    if (empty($field_input)) {
+        $field['error'] = 'Laukelis negali buti tuscias!';
+        return false;
     }
+
+    return true;
 }
+
+/**
+ * F-cija, tikrinanti ar laukelis yra skaicius
+ * @param $field_input siunciam ivesta laukeli
+ * @param $field parasom i formos masyvo laukelio errora
+ * @return bool graziname erroro booleana, kuris veliau pagelbes
+ */
+function validate_is_number($field_input, array &$field): bool
+{
+    if (!is_numeric($field_input)) {
+        $field['error'] = 'Cia turi buti skaicius!';
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * F-cija, tikrinanti ar skaicius yra teigiamas
+ * @param $field_input siunciam ivesta laukeli
+ * @param $field parasom i formos masyvo laukelio errora
+ * @return bool graziname erroro booleana, kuris veliau pagelbes
+ */
+function validate_is_positive($field_input, array &$field): bool
+{
+    if ($field_input <= 0) {
+        $field['error'] = 'Skaicius turi buti teigiamas!';
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * F-cija, tikrinanti ar skaicius nevirsija 100
+ * @param $field_input siunciam ivesta laukeli
+ * @param $field parasom i formos masyvo laukelio errora
+ * @return bool graziname erroro booleana, kuris veliau pagelbes
+ */
+function validate_max_100($field_input, array &$field): bool
+{
+    if ($field_input > 100) {
+        $field['error'] = 'Skaicius negali buti didesnis uz 100!';
+        return false;
+    }
+
+    return true;
+}
+
+

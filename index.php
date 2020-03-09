@@ -11,32 +11,91 @@ $form = [
     'fields' => [
         'name' => [
             'label' => 'Username',
-            'type' => 'text'
+            'type' => 'text',
+            'placeholder' => 'Vardenis Pavardenis',
+            'validate' => [
+                'validate_not_empty'
+            ]
         ],
         'password' => [
             'label' => 'Password',
             'type' => 'password',
-            'filter' => FILTER_SANITIZE_NUMBER_INT
+            'placeholder' => '********',
+            'validate' => [
+                'validate_not_empty'
+            ]
+        ],
+        'age' => [
+            'label' => 'Age',
+            'type' => 'number',
+            'placeholder' => '30',
+            'filter' => FILTER_SANITIZE_NUMBER_INT,
+            'validate' => [
+                'validate_not_empty',
+                'validate_is_number',
+                'validate_is_positive',
+                'validate_max_100'
+            ]
         ],
         'textarea' => [
-            'label' => 'Komentaras',
-            'type' => 'textarea'
+            'label' => 'Comment',
+            'type' => 'textarea',
+            'placeholder' => 'Cia yra tavo tekstas...',
+            'validate' => [
+                'validate_not_empty'
+            ]
+        ],
+        'select' => [
+            'type' => 'select',
+            'label' => 'Level',
+            'options' => [
+                'Beginner',
+                'Intermediate',
+                'Professional'
+            ]
         ]
     ],
     'buttons' => [
         'submit' => [
             'title' => 'SUBMIT',
             'value' => 'submit',
-        ],
-        'update' => [
-            'title' => 'UPDATE',
-            'value' => 'update'
         ]
+    ],
+    'callbacks' => [
+        'success' => 'form_success',
+        'fail' => 'form_fail'
     ]
 ];
 
-//Funkcija tikrinanti mygtuko paspaudima
-pressed_button($form);
+if ($_POST) {
+    $sanitized_items = get_filtered_input($form);
+    $validated = validate_form($form, $sanitized_items);
+    if($validated) {
+        $is_valid = $form['callbacks']['success'];
+        $is_valid();
+    } else {
+        $is_valid = $form['callbacks']['fail'];
+        $is_valid();
+    }
+}
+
+/**
+ * F-cija, kuri ivyks, kai formos atitiks visus validacijos reikalavimus
+ */
+function form_success()
+{
+    var_dump('Blet zjbs');
+}
+
+
+/**
+ * F-cija, kuri ivyks, kai forma neatitiks nors vieno reikalavimo
+ */
+function form_fail()
+{
+    var_dump('Blet nezjbs');
+}
+
 ?>
 <html>
 <head>

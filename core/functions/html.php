@@ -28,7 +28,8 @@ function input_attr(array $field, string $field_id)
         [
             'name' => $field_id,
             'type' => $field['type'],
-            'value' => $field['value'] ?? ''
+            'value' => $field['value'] ?? '',
+            'placeholder' => $field['placeholder']
         ]);
 }
 
@@ -44,8 +45,44 @@ function textarea_attr(array $field, string $field_id)
         ($field['extras']['attr'] ?? []) +
         [
             'name' => $field_id,
+            'placeholder' => $field['placeholder']
         ]);
 }
+
+/**
+ * F-cija, kuri sugeneruoja textarea
+ * @param array $field siunciame viena is fieldu
+ * @param string $field_id siunciame jo indexo id, kuris yra toks pat kaip vardas
+ * @return string graziname kita funkcija
+ */
+function select_attr(array $field, string $field_id)
+{
+    return html_attr(
+        ($field['extras']['attr'] ?? []) +
+        [
+            'name' => $field_id,
+            'value' => $field['value'] ?? ''
+        ]);
+}
+
+/**
+ * F-cija, kuri sugeneruoja textarea
+ * @param array $field siunciame viena is fieldu
+ * @param string $field_id siunciame jo indexo id, kuris yra toks pat kaip vardas
+ * @return string graziname kita funkcija
+ */
+function option_attr(array $field, $option_id)
+{
+    $attr = [
+        'value' => $option_id ?? ''
+    ];
+    if(($field['value'] ?? null) == $option_id) {
+        $attr['selected'] = true;
+    }
+    return html_attr($attr);
+}
+
+
 
 /**
  * F-cija, kuri sugeneruoja mygtuka
