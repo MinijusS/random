@@ -69,14 +69,7 @@ $form = [
 
 if ($_POST) {
     $sanitized_items = get_filtered_input($form);
-    $validated = validate_form($form, $sanitized_items);
-    if($validated) {
-        $is_valid = $form['callbacks']['success'];
-        $is_valid();
-    } else {
-        $is_valid = $form['callbacks']['fail'];
-        $is_valid();
-    }
+    validate_form($form, $sanitized_items);
 }
 
 /**
@@ -87,7 +80,6 @@ function form_success()
     var_dump('Blet zjbs');
 }
 
-
 /**
  * F-cija, kuri ivyks, kai forma neatitiks nors vieno reikalavimo
  */
@@ -95,12 +87,11 @@ function form_fail()
 {
     var_dump('Blet nezjbs');
 }
-
 ?>
 <html>
 <head>
     <title>Formos</title>
-    <link href="styles.css" rel="stylesheet">
+    <link href="assets/styles.css" rel="stylesheet">
 </head>
 <body>
 <?php include 'templates/form.tpl.php'; ?>

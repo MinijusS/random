@@ -23,6 +23,7 @@ function get_filtered_input(array $form): array
  * F-cija, kuri tikrina pacia forma
  * @param $form siunciame forma, kuria naudosime
  * @param $safe_input siunciame jau prafiltruotus laukelius, pagal kuriuos tikrinsim
+ * @return bool
  */
 function validate_form(&$form, $safe_input): bool
 {
@@ -38,6 +39,13 @@ function validate_form(&$form, $safe_input): bool
             }
         }
     }
+
+    if($success) {
+        $form['callbacks']['success']();
+    } else {
+        $form['callbacks']['fail']();
+    }
+
     return $success;
 }
 
