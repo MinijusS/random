@@ -14,7 +14,29 @@ $form = [
             'type' => 'text',
             'placeholder' => 'Vardenis Pavardenis',
             'validate' => [
+                'validate_not_empty',
+                'validate_spaces',
+                'validate_text_length' => [
+                    'min' => 0,
+                    'max' => 30
+                ]
+            ]
+        ],
+        'email' => [
+            'label' => 'E-mail',
+            'type' => 'email',
+            'placeholder' => 'vardenis@gmail.com',
+            'validate' => [
                 'validate_not_empty'
+            ]
+        ],
+        'phone' => [
+            'label' => 'Phone',
+            'type' => 'text',
+            'placeholder' => '+3706000000',
+            'validate' => [
+                'validate_not_empty',
+                'validate_phone'
             ]
         ],
         'password' => [
@@ -22,43 +44,77 @@ $form = [
             'type' => 'password',
             'placeholder' => '********',
             'validate' => [
-                'validate_not_empty'
+                'validate_not_empty',
+                'validate_text_length' => [
+                    'min' => 0,
+                    'max' => 6
+                ]
             ]
         ],
-        'age' => [
-            'label' => 'Age',
-            'type' => 'number',
-            'placeholder' => '30',
-            'filter' => FILTER_SANITIZE_NUMBER_INT,
+        'password_repeat' => [
+            'label' => 'Repeat password',
+            'type' => 'password',
+            'placeholder' => '********',
             'validate' => [
                 'validate_not_empty',
-                'validate_is_number',
-                'validate_is_positive',
-                'validate_max_100'
+                'validate_text_length' => [
+                    'min' => 0,
+                    'max' => 6
+                ]
             ]
         ],
-        'textarea' => [
-            'label' => 'Comment',
-            'type' => 'textarea',
-            'placeholder' => 'Cia yra tavo tekstas...',
-            'validate' => [
-                'validate_not_empty'
-            ]
-        ],
-        'select' => [
-            'type' => 'select',
-            'label' => 'Level',
-            'options' => [
-                'Beginner',
-                'Intermediate',
-                'Professional'
-            ]
-        ]
+//        'number1' => [
+//            'label' => 'Number X',
+//            'type' => 'number',
+//            'placeholder' => '30',
+//            'filter' => FILTER_SANITIZE_NUMBER_INT,
+//            'validate' => [
+//                'validate_not_empty',
+//                'validate_is_number'
+//            ]
+//        ],
+//        'number2' => [
+//            'label' => 'Number Y',
+//            'type' => 'number',
+//            'placeholder' => '50',
+//            'filter' => FILTER_SANITIZE_NUMBER_INT,
+//            'validate' => [
+//                'validate_not_empty',
+//                'validate_is_number'
+//            ]
+//        ],
+//        'textarea' => [
+//            'label' => 'Comment',
+//            'type' => 'textarea',
+//            'placeholder' => 'Cia yra tavo tekstas...',
+//            'validate' => [
+//                'validate_not_empty'
+//            ]
+//        ],
+//        'select' => [
+//            'type' => 'select',
+//            'label' => 'Veiksmas',
+//            'options' => [
+//                'Sudetis' => 'Sudetis',
+//                'Atimtis' => 'Atimtis',
+//                'Dalyba' => 'Dalyba',
+//                'Daugyba' => 'Daugyba'
+//            ],
+//            'validate' => [
+//                'validate_select'
+//            ]
+//        ]
     ],
     'buttons' => [
         'submit' => [
-            'title' => 'SUBMIT',
+            'title' => 'Submit',
             'value' => 'submit',
+        ]
+    ],
+    'validators' => [
+        'validate_fields_match' => [
+            'password',
+            'password_repeat'
         ]
     ],
     'callbacks' => [
@@ -75,9 +131,23 @@ if ($_POST) {
 /**
  * F-cija, kuri ivyks, kai formos atitiks visus validacijos reikalavimus
  */
-function form_success()
+function form_success($safe_input)
 {
-    var_dump('Blet zjbs');
+//    $action = $safe_input['select'];
+//    switch ($safe_input['select']) {
+//        case $action == 'Sudetis':
+//            print $safe_input['number1'] + $safe_input['number2'];
+//            break;
+//        case $action == 'Atimtis':
+//            print $safe_input['number1'] - $safe_input['number2'];
+//            break;
+//        case $action == 'Dalyba':
+//            print $safe_input['number1'] / $safe_input['number2'];
+//            break;
+//        case $action == 'Daugyba':
+//            print $safe_input['number1'] * $safe_input['number2'];
+//            break;
+//    }
 }
 
 /**
@@ -85,15 +155,16 @@ function form_success()
  */
 function form_fail()
 {
-    var_dump('Blet nezjbs');
+
 }
+
 ?>
 <html>
 <head>
     <title>Formos</title>
-    <link href="assets/styles.css" rel="stylesheet">
+    <link href="/app/assets/styles.css" rel="stylesheet">
 </head>
 <body>
-<?php include 'templates/form.tpl.php'; ?>
+<?php include 'core/templates/form.tpl.php'; ?>
 </body>
 </html>

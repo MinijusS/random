@@ -66,7 +66,7 @@ function select_attr(array $field, string $field_id)
 }
 
 /**
- * F-cija, kuri sugeneruoja textarea
+ * F-cija, kuri sugeneruoja option attributa
  * @param array $field siunciame viena is fieldu
  * @param string $field_id siunciame jo indexo id, kuris yra toks pat kaip vardas
  * @return string graziname kita funkcija

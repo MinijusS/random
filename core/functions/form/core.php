@@ -20,19 +20,30 @@ function get_filtered_input(array $form): array
 }
 
 /**
- * F-cija, kuri tikrina pacia forma
- * @param $form siunciame forma, kuria naudosime
- * @param $safe_input siunciame jau prafiltruotus laukelius, pagal kuriuos tikrinsim
+ * F-cija, kuri validuoja pacia forma
+ * (sukuria fieldams-formai errorus)
+ * @param array $form
+ * @param array $safe_input isfiltruotas post masyvas
  * @return bool
  */
-function validate_form(&$form, $safe_input): bool
+function validate_form(array &$form, array $safe_input): bool
 {
     $success = true;
-    foreach ($safe_input as $input_index => $value) {
-        $field = &$form['fields'][$input_index];
-        $field['value'] = $safe_input[$input_index];
-        foreach ($field['validate'] ?? [] as $validate) {
-            $is_valid = $validate($value, $field);
+
+    foreach ($form['fields'] as $field_index => &$field) {
+        $field['value'] = $safe_input[$field_index];
+
+        foreach ($field['validate'] ?? [] as $validator_index => $field_validator) {
+            if (is_array($field_validator)) {
+                $validator_function = $validator_index;
+                $validator_params = $field_validator;
+
+                $is_valid = $validator_function($field['value'], $field, $validator_params);
+            } else {
+                $validator_function = $field_validator;
+
+                $is_valid = $validator_function($field['value'], $field);
+            }
             if (!$is_valid) {
                 $success = false;
                 break;
@@ -40,77 +51,38 @@ function validate_form(&$form, $safe_input): bool
         }
     }
 
-    if($success) {
-        $form['callbacks']['success']();
+    //Dabar tikrinsim formos lygio validatorius
+//    if ($success) {
+        foreach ($form['validators'] ?? [] as $validator_index => $form_validator) {
+            if (is_array($form_validator)) {
+                $validator_function = $validator_index;
+                $validator_params = $form_validator;
+
+                $is_valid = $validator_function($safe_input, $form, $validator_params);
+            } else {
+                $validator_function = $form_validator;
+
+                $is_valid = $validator_function($safe_input, $form);
+            }
+            if (!$is_valid) {
+                $success = false;
+                break;
+            }
+        }
+//    }
+
+    if ($success) {
+        if (isset($form['callbacks']['success'])) {
+            $form['callbacks']['success']($safe_input, $form);
+        }
     } else {
-        $form['callbacks']['fail']();
+        if (isset($form['callbacks']['fail'])) {
+            $form['callbacks']['fail']($safe_input, $form);
+        }
     }
 
     return $success;
 }
 
-/**
- * F-cija, tikrinanti ar laukelis netuscias
- * @param $field_input siunciam ivesta laukeli
- * @param $field parasom i formos masyvo laukelio errora
- * @return bool graziname erroro booleana, kuris veliau pagelbes
- */
-function validate_not_empty($field_input, array &$field): bool
-{
-    if (empty($field_input)) {
-        $field['error'] = 'Laukelis negali buti tuscias!';
-        return false;
-    }
-
-    return true;
-}
-
-/**
- * F-cija, tikrinanti ar laukelis yra skaicius
- * @param $field_input siunciam ivesta laukeli
- * @param $field parasom i formos masyvo laukelio errora
- * @return bool graziname erroro booleana, kuris veliau pagelbes
- */
-function validate_is_number($field_input, array &$field): bool
-{
-    if (!is_numeric($field_input)) {
-        $field['error'] = 'Cia turi buti skaicius!';
-        return false;
-    }
-
-    return true;
-}
-
-/**
- * F-cija, tikrinanti ar skaicius yra teigiamas
- * @param $field_input siunciam ivesta laukeli
- * @param $field parasom i formos masyvo laukelio errora
- * @return bool graziname erroro booleana, kuris veliau pagelbes
- */
-function validate_is_positive($field_input, array &$field): bool
-{
-    if ($field_input <= 0) {
-        $field['error'] = 'Skaicius turi buti teigiamas!';
-        return false;
-    }
-
-    return true;
-}
-
-/**
- * F-cija, tikrinanti ar skaicius nevirsija 100
- * @param $field_input siunciam ivesta laukeli
- * @param $field parasom i formos masyvo laukelio errora
- * @return bool graziname erroro booleana, kuris veliau pagelbes
- */
-function validate_max_100($field_input, array &$field): bool
-{
-    if ($field_input > 100) {
-        $field['error'] = 'Skaicius negali buti didesnis uz 100!';
-        return false;
-    }
-
-    return true;
-}
 
 

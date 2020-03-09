@@ -29,9 +29,26 @@ input, textarea, select {
     margin-top: 5px;
 }
 
+.box {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+}
+
 .error {
     color: red;
     margin-top: 5px;
+}
+
+.error-label {
+    color: white;
+    background-color: red;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    margin: 20px 0;
+    box-sizing: border-box;
+    text-align: center;
 }
 
 .field label{
@@ -44,7 +61,7 @@ button {
     font-size: 15px;
     border-radius: 10px;
     border: none;
-    background-color: #74b9ff;
+    background-color: #00b894;
     color: white;
     cursor: pointer;
 }
