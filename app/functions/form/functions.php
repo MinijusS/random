@@ -31,7 +31,7 @@ function validate_text_length($field_input, array &$field, array $params): bool
     $text_length = strlen($field_input);
 
     if ($text_length <= $params['min'] || $text_length > $params['max']) {
-        $field['error'] = strtr("Raidziu ilgis turi buti ne mazesnis uz @min ir ne didesnis uz @max", [
+        $field['error'] = strtr("Simboliu skaicius turi buti ne mazesnis uz @min ir ne didesnis uz @max", [
             '@min' => $params['min'],
             '@max' => $params['max']
         ]);

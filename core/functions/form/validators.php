@@ -65,7 +65,12 @@ function validate_spaces($field_input, array &$field): bool
 
 function validate_select($field_input, array &$field): bool
 {
-    if (!in_array($field_input, $field['options'])) {
+    $indexes = [];
+    foreach ($field['options'] as $index => $option) {
+        $indexes[] = $index;
+    }
+
+    if (!in_array($field_input, $indexes)) {
         $field['error'] = 'Neteisingas veiksmas';
         return false;
     }
@@ -107,7 +112,7 @@ function validate_fields_match(array $filtered_input, array &$form, array $param
  */
 function validate_phone($field_input, array &$field): bool
 {
-    if (!preg_match('/\+3706[0-9]{7}/', $field_input)) {
+    if (!preg_match('/\+3706[0-9]{7}$/', $field_input)) {
         $field['error'] = 'Telefono numeris neteisingas!';
 
         return false;

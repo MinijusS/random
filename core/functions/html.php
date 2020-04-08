@@ -29,8 +29,31 @@ function input_attr(array $field, string $field_id)
             'name' => $field_id,
             'type' => $field['type'],
             'value' => $field['value'] ?? '',
-            'placeholder' => $field['placeholder']
+            'placeholder' => $field['placeholder'] ?? ''
         ]);
+}
+
+/**
+ * F-cija, kuri sugeneruoja radio inputa
+ * @param array $field siunciame viena is fieldu
+ * @param string $field_id siunciame jo indexo id, kuris yra toks pat kaip vardas
+ * @return string graziname kita funkcija
+ */
+function radio_attr(array $field, $option_id, $field_id)
+{
+    $attr = [
+        'value' => $option_id ?? ''
+    ];
+    if(($field['value'] ?? null) == $option_id) {
+        $attr['checked'] = true;
+    }
+
+    return html_attr(
+        ($field['extras']['attr'] ?? []) +
+        [
+            'name' => $field_id,
+            'type' => $field['type'],
+        ] + $attr);
 }
 
 /**

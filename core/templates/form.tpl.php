@@ -17,6 +17,10 @@
                                 <option <?php print option_attr($field, $index); ?>><?php print $option; ?></option>
                             <?php endforeach; ?>
                         </select>
+                    <?php elseif (in_array($field['type'], ['radio'])): ?>
+                        <?php foreach ($field['options'] as $index => $option): ?>
+                            <input <?php print radio_attr($field, $index, $field_id); ?>><?php print $option; ?>
+                        <?php endforeach; ?>
                     <?php endif; ?>
                     <?php if (isset($field['error'])): ?>
                         <span class="error"><?php print $field['error']; ?></span>

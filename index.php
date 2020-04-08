@@ -30,39 +30,39 @@ $form = [
                 'validate_not_empty'
             ]
         ],
-        'phone' => [
-            'label' => 'Phone',
-            'type' => 'text',
-            'placeholder' => '+3706000000',
-            'validate' => [
-                'validate_not_empty',
-                'validate_phone'
-            ]
-        ],
-        'password' => [
-            'label' => 'Password',
-            'type' => 'password',
-            'placeholder' => '********',
-            'validate' => [
-                'validate_not_empty',
-                'validate_text_length' => [
-                    'min' => 0,
-                    'max' => 6
-                ]
-            ]
-        ],
-        'password_repeat' => [
-            'label' => 'Repeat password',
-            'type' => 'password',
-            'placeholder' => '********',
-            'validate' => [
-                'validate_not_empty',
-                'validate_text_length' => [
-                    'min' => 0,
-                    'max' => 6
-                ]
-            ]
-        ],
+//        'phone' => [
+//            'label' => 'Phone',
+//            'type' => 'text',
+//            'placeholder' => '+3706000000',
+//            'validate' => [
+//                'validate_not_empty',
+//                'validate_phone'
+//            ]
+//        ],
+//        'password' => [
+//            'label' => 'Password',
+//            'type' => 'password',
+//            'placeholder' => '********',
+//            'validate' => [
+//                'validate_not_empty',
+//                'validate_text_length' => [
+//                    'min' => 6,
+//                    'max' => 20
+//                ]
+//            ]
+//        ],
+//        'password_repeat' => [
+//            'label' => 'Repeat password',
+//            'type' => 'password',
+//            'placeholder' => '********',
+//            'validate' => [
+//                'validate_not_empty',
+//                'validate_text_length' => [
+//                    'min' => 6,
+//                    'max' => 20
+//                ]
+//            ]
+//        ],
 //        'number1' => [
 //            'label' => 'Number X',
 //            'type' => 'number',
@@ -91,31 +91,51 @@ $form = [
 //                'validate_not_empty'
 //            ]
 //        ],
-//        'select' => [
-//            'type' => 'select',
-//            'label' => 'Veiksmas',
-//            'options' => [
-//                'Sudetis' => 'Sudetis',
-//                'Atimtis' => 'Atimtis',
-//                'Dalyba' => 'Dalyba',
-//                'Daugyba' => 'Daugyba'
-//            ],
-//            'validate' => [
-//                'validate_select'
-//            ]
-//        ]
+        'question1' => [
+            'type' => 'radio',
+            'label' => 'Ar laikai kardana?',
+            'options' => [
+                'yes' => 'Taip',
+                'no' => 'Ne',
+            ],
+            'validate' => [
+                'validate_select',
+            ]
+        ],
+        'question2' => [
+            'type' => 'radio',
+            'label' => 'Ar pili i baka?',
+            'options' => [
+                'yes' => 'Taip',
+                'no' => 'Ne',
+            ],
+            'validate' => [
+                'validate_select',
+            ]
+        ],
+        'question3' => [
+            'type' => 'radio',
+            'label' => 'Ar rukai zoliu arbata?',
+            'options' => [
+                'yes' => 'Taip',
+                'no' => 'Ne',
+            ],
+            'validate' => [
+                'validate_select',
+            ]
+        ]
     ],
     'buttons' => [
         'submit' => [
-            'title' => 'Submit',
+            'title' => 'Ziureti statistika',
             'value' => 'submit',
         ]
     ],
     'validators' => [
-        'validate_fields_match' => [
-            'password',
-            'password_repeat'
-        ]
+//        'validate_fields_match' => [
+//            'password',
+//            'password_repeat'
+//        ]
     ],
     'callbacks' => [
         'success' => 'form_success',
@@ -131,32 +151,42 @@ if ($_POST) {
 /**
  * F-cija, kuri ivyks, kai formos atitiks visus validacijos reikalavimus
  */
-function form_success($safe_input)
+function form_success($safe_input, $form)
 {
-//    $action = $safe_input['select'];
-//    switch ($safe_input['select']) {
-//        case $action == 'Sudetis':
-//            print $safe_input['number1'] + $safe_input['number2'];
-//            break;
-//        case $action == 'Atimtis':
-//            print $safe_input['number1'] - $safe_input['number2'];
-//            break;
-//        case $action == 'Dalyba':
-//            print $safe_input['number1'] / $safe_input['number2'];
-//            break;
-//        case $action == 'Daugyba':
-//            print $safe_input['number1'] * $safe_input['number2'];
-//            break;
-//    }
+    $existing = file_to_array(DB_FILE);
+    $existing[] = $safe_input;
+    array_to_file($existing, DB_FILE);
+    setcookie('form_done', 1, strtotime('+1 year'));
+    $_COOKIE['form_done'] = true;
 }
 
 /**
  * F-cija, kuri ivyks, kai forma neatitiks nors vieno reikalavimo
  */
-function form_fail()
+function form_fail($safe_input, $form)
 {
-
+    setcookie('data', json_encode($safe_input), time() + 3600);
 }
+
+if (isset($_COOKIE['data'])) {
+    $decoded_data = json_decode($_COOKIE['data'], true);
+    foreach ($decoded_data as $data_index => $data_item) {
+        foreach ($form['fields'] as $field_index => &$field) {
+            if ($data_index == $field_index) {
+                $field['value'] = urldecode($data_item);
+                unset($field);
+            }
+        }
+    }
+}
+
+$user_id = $_COOKIE['user_id'] ?? microtime();
+$visits = ($_COOKIE['visits'] ?? 0) + 1;
+
+setcookie('user_id', $user_id, strtotime('+1 year'));
+setcookie('visits', $visits, strtotime('+1 year'));
+
+!isset($_COOKIE['form_done']) ?: header('Location: results.php');
 
 ?>
 <html>

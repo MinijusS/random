@@ -52,24 +52,22 @@ function validate_form(array &$form, array $safe_input): bool
     }
 
     //Dabar tikrinsim formos lygio validatorius
-//    if ($success) {
-        foreach ($form['validators'] ?? [] as $validator_index => $form_validator) {
-            if (is_array($form_validator)) {
-                $validator_function = $validator_index;
-                $validator_params = $form_validator;
+    foreach ($form['validators'] ?? [] as $validator_index => $form_validator) {
+        if (is_array($form_validator)) {
+            $validator_function = $validator_index;
+            $validator_params = $form_validator;
 
-                $is_valid = $validator_function($safe_input, $form, $validator_params);
-            } else {
-                $validator_function = $form_validator;
+            $is_valid = $validator_function($safe_input, $form, $validator_params);
+        } else {
+            $validator_function = $form_validator;
 
-                $is_valid = $validator_function($safe_input, $form);
-            }
-            if (!$is_valid) {
-                $success = false;
-                break;
-            }
+            $is_valid = $validator_function($safe_input, $form);
         }
-//    }
+        if (!$is_valid) {
+            $success = false;
+            break;
+        }
+    }
 
     if ($success) {
         if (isset($form['callbacks']['success'])) {
@@ -83,6 +81,3 @@ function validate_form(array &$form, array $safe_input): bool
 
     return $success;
 }
-
-
-
