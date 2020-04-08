@@ -120,3 +120,60 @@ function validate_phone($field_input, array &$field): bool
 
     return true;
 }
+
+/**
+ * F-cija, tikrinanti ar tokios komandos dar nera irasytos TEAMS faile
+ * @param $field_input irasyta komandos reiksme laukelyje
+ * @param $field
+ * @return bool
+ */
+function validate_team($field_input, array &$field): bool
+{
+    $existing = file_to_array(TEAMS_FILE);
+    foreach ($existing ?? [] as $item) {
+        if ($item['name'] == $field_input) {
+            $field['error'] = 'Tokia komanda jau egzistuoja!';
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * F-cija, tikrinanti ar tokios komandos dar nera irasytos TEAMS faile
+ * @param $field_input irasyta komandos reiksme laukelyje
+ * @param $field
+ * @return bool
+ */
+function validate_selected($field_input, array &$field): bool
+{
+    if ($field_input == '') {
+        $field['error'] = 'Prasome pasirinkti reiksme!';
+
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * @param $value atsiusti fieldai
+ * @param $form
+ * @return bool
+ */
+function validate_player_unique(array $value, array &$form): bool
+{
+    $existing = file_to_array(TEAMS_FILE);
+    $team_id = $value['team'];
+    foreach ($existing[$team_id]['players'] ?? [] as $player) {
+        if ($player['name'] == $value['username']) {
+            $form['error'] = 'Toks username sitoje komandoje jau uzregistruotas!';
+
+            return false;
+        }
+    }
+
+    return true;
+}

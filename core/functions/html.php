@@ -44,7 +44,7 @@ function radio_attr(array $field, $option_id, $field_id)
     $attr = [
         'value' => $option_id ?? ''
     ];
-    if(($field['value'] ?? null) == $option_id) {
+    if (($field['value'] ?? null) == $option_id) {
         $attr['checked'] = true;
     }
 
@@ -99,12 +99,11 @@ function option_attr(array $field, $option_id)
     $attr = [
         'value' => $option_id ?? ''
     ];
-    if(($field['value'] ?? null) == $option_id) {
+    if (($field['value'] ?? null) == $option_id) {
         $attr['selected'] = true;
     }
     return html_attr($attr);
 }
-
 
 
 /**

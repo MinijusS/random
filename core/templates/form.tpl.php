@@ -1,6 +1,8 @@
 <div class="box">
     <?php if (isset($form['error'])): ?>
         <span class="error-label"><?php print $form['error']; ?></span>
+    <?php elseif (isset($form['success'])): ?>
+        <span class="success-label"><?php print $form['success']; ?></span>
     <?php endif; ?>
     <form <?php print html_attr(($form['attr'] ?? []) + ['method' => 'POST']); ?>>
         <?php foreach ($form['fields'] ?? [] as $field_id => $field): ?>
@@ -13,7 +15,7 @@
                         <textarea <?php print textarea_attr($field, $field_id); ?>><?php print $field['value'] ?? ''; ?></textarea>
                     <?php elseif (in_array($field['type'], ['select'])): ?>
                         <select <?php print select_attr($field, $field_id); ?>>
-                            <?php foreach ($field['options'] as $index => $option): ?>
+                            <?php foreach ($field['options'] ?? [] as $index => $option): ?>
                                 <option <?php print option_attr($field, $index); ?>><?php print $option; ?></option>
                             <?php endforeach; ?>
                         </select>

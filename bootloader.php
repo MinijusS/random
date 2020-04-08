@@ -6,3 +6,4 @@ require 'core/functions/html.php';
 require 'app/functions/form/functions.php';
 
 define ('DB_FILE', 'app/data/db.json');
+define ('TEAMS_FILE', 'app/data/teams.json');
