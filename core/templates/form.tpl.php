@@ -13,6 +13,8 @@
                         <input <?php print input_attr($field, $field_id); ?>>
                     <?php elseif (in_array($field['type'], ['textarea'])): ?>
                         <textarea <?php print textarea_attr($field, $field_id); ?>><?php print $field['value'] ?? ''; ?></textarea>
+                    <?php elseif (in_array($field['type'], ['color'])): ?>
+                        <input <?php print color_attr($field, $field_id); ?>>
                     <?php elseif (in_array($field['type'], ['select'])): ?>
                         <select <?php print select_attr($field, $field_id); ?>>
                             <?php if (isset($field['placeholder'])): ?>
@@ -43,18 +45,22 @@
 
 <script>
     const select = document.querySelector('select');
-    const input = document.querySelector('input[name="username"]');
+    const username = document.querySelector('input[name="username"]');
+    const password = document.querySelector('input[name="password"]');
     const button = document.querySelector('.join_btn');
 
     button.className = 'hidden';
-    input.parentElement.parentElement.className = 'hidden';
+    username.parentElement.parentElement.className = 'hidden';
+    password.parentElement.parentElement.className = 'hidden';
 
     if (select.value != 'Pasirinkite komanda') {
         button.className = 'field';
-        input.parentElement.parentElement.className = 'field';
+        username.parentElement.parentElement.className = 'field';
+        password.parentElement.parentElement.className = 'field';
     } else {
         select.addEventListener('change', function (event) {
-            input.parentElement.parentElement.className = (this.value != false || this.value == 0) ? 'field' : 'hidden';
+            username.parentElement.parentElement.className = (this.value != false || this.value == 0) ? 'field' : 'hidden';
+            password.parentElement.parentElement.className = (this.value != false || this.value == 0) ? 'field' : 'hidden';
             button.className = (this.value != false || this.value == 0) ? 'field' : 'hidden';
         })
     }

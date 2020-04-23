@@ -3,12 +3,12 @@
  * F-cija, tikrinanti ar skaiciaus range
  * @param $field_input siunciam ivesta laukeli
  * @param array $field parasom i formos masyvo laukelio errora
- * @param $params siunciam range min ir max
+ * @param array $params siunciam range min ir max
  * @return bool graziname erroro booleana, kuris veliau pagelbes
  */
-function validate_age_range($field_input, array &$field, array $params): bool
+function validate_number_range($field_input, array &$field, array $params): bool
 {
-    if($field_input <= $params['min'] || $field_input >= $params['max']) {
+    if ($field_input <= $params['min'] || $field_input >= $params['max']) {
         $field['error'] = strtr("Skaicius turi buti didesnis uz @min ir mazesnis uz @max", [
             '@min' => $params['min'],
             '@max' => $params['max']
@@ -23,7 +23,7 @@ function validate_age_range($field_input, array &$field, array $params): bool
  * F-cija, tikrinanti zodzio ilguma
  * @param $field_input siunciam ivesta laukeli
  * @param array $field parasom i formos masyvo laukelio errora
- * @param $params siunciam range min ir max
+ * @param array $params siunciam range min ir max
  * @return bool graziname erroro booleana, kuris veliau pagelbes
  */
 function validate_text_length($field_input, array &$field, array $params): bool
@@ -43,41 +43,27 @@ function validate_text_length($field_input, array &$field, array $params): bool
 }
 
 /**
- * F-cija, tikrinanti ar tokios komandos dar nera irasytos TEAMS faile
- * @param $field_input irasyta komandos reiksme laukelyje
- * @param $field
- * @return bool
- */
-function validate_team($field_input, array &$field): bool
-{
-    $existing = file_to_array(TEAMS_FILE);
-    foreach ($existing ?? [] as $item) {
-        if ($item['team_id'] == $field_input) {
-            $field['error'] = 'Tokia komanda jau egzistuoja!';
-
-            return false;
-        }
-    }
-
-    return true;
-}
-
-/**
- * @param $value atsiusti fieldai
+ * F-cija, kuri tikrina logina
+ * @param $safe_input
  * @param $form
  * @return bool
  */
-function validate_player_unique(array $value, array &$form): bool
+function validate_login(array $safe_input, array &$form)
 {
-    $existing = file_to_array(TEAMS_FILE);
-    $team_id = $value['team'];
-    foreach ($existing[$team_id]['players'] ?? [] as $player) {
-        if ($player['name'] == $value['username']) {
-            $form['error'] = 'Toks slapyvardis sitoje komandoje jau uzregistruotas!';
+    if ($users = App\App::$db->getRowsWhere('users', ['email' => $safe_input['email']])) {
+        $user = reset($users);
+        if (crypt($safe_input['password'], HASH_SALT) == $user['password']) {
+            // if password is correct
+            $form['success'] = 'Sekmingai prisijungete!';
+
+            return true;
+        } else {
+            $form['error'] = 'Slaptazodis neteisingas!';
 
             return false;
         }
+    } else {
+        $form['error'] = 'Tokio vartotojo nera!';
+        return false;
     }
-
-    return true;
 }

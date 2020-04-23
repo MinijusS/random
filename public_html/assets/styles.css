@@ -17,6 +17,7 @@ nav {
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    margin-bottom: 50px;
 }
 
 nav a {
@@ -31,11 +32,14 @@ form {
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
 form>* {
     margin: 10px;
+}
+
+section {
+    margin-top: 20px;
 }
 
 input, textarea, select {
@@ -45,6 +49,11 @@ input, textarea, select {
     font-size: 18px;
     resize: none;
     margin-top: 5px;
+}
+
+input[type="color"] {
+    width: 100%;
+    height: 32px;
 }
 
 .box {
@@ -121,4 +130,65 @@ th {
 
 .hidden {
     display: none;
+}
+
+.players {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    text-align: center;
+}
+
+.player img {
+    width: 200px;
+    height: 200px;
+}
+
+.btn {
+    padding: 10px;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: #00b894;
+}
+
+.pixels-box {
+    width: 500px;
+    height: 500px;
+    position: relative;
+    background-color: #f4fcff;
+}
+
+.pixel {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    transform: translate(-50%, -50%);
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #2d3436;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 20px;
+    left: 20px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
 }

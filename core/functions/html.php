@@ -34,6 +34,23 @@ function input_attr(array $field, string $field_id)
 }
 
 /**
+ * F-cija, kuri sugeneruoja inputa
+ * @param array $field siunciame viena is fieldu
+ * @param string $field_id siunciame jo indexo id, kuris yra toks pat kaip vardas
+ * @return string graziname kita funkcija
+ */
+function color_attr(array $field, string $field_id)
+{
+    return html_attr(
+        ($field['extras']['attr'] ?? []) +
+        [
+            'name' => $field_id,
+            'type' => $field['type'],
+            'value' => $field['value'] ?? '',
+        ]);
+}
+
+/**
  * F-cija, kuri sugeneruoja radio inputa
  * @param array $field siunciame viena is fieldu
  * @param string $field_id siunciame jo indexo id, kuris yra toks pat kaip vardas

@@ -1,14 +1,30 @@
 <?php
 $nav = [
     [
-        'name' => 'Create Team',
-        'url' => '/create.php'
+        'name' => 'Home',
+        'url' => '/'
     ],
     [
-        'name' => 'Join Team',
-        'url' => '/join.php'
+        'name' => 'Register',
+        'url' => '/register.php'
+    ],
+    [
+        'name' => 'Login',
+        'url' => '/login.php'
+    ],
+    [
+        'name' => 'Logout',
+        'url' => '/logout.php',
     ]
 ];
+
+if(isset($_SESSION['email'])) {
+    unset($nav[1]);
+    unset($nav[2]);
+} else {
+    unset($nav[3]);
+}
+
 ?>
 
 <nav>
