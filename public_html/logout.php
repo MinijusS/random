@@ -1,4 +1,4 @@
 <?php
 include '../bootloader.php';
-session_destroy();
-header("Location: /login.php");
+\App\App::$session->logout('/login.php');
+

@@ -9,10 +9,13 @@ function form_success($safe_input, &$form)
     unset($safe_input['password_repeat']);
     $hashed_password = crypt($safe_input['password'], HASH_SALT);
     $safe_input['password'] = $hashed_password;
+    $safe_input['points'] = 100;
+    $safe_input['admin'] = false;
 
     App\App::$db->insertRow('users', $safe_input);
 
     $form['success'] = 'Vartotojas sekmingai pridetas!';
+
     $page = $_SERVER['PHP_SELF'];
     header("Refresh: 2; url=$page");
 }
@@ -56,7 +59,7 @@ $form = [
             ]
         ],
         'password_repeat' => [
-            'label' => 'Slaptazodis',
+            'label' => 'Pakartokite slaptazodi',
             'type' => 'password',
             'placeholder' => '**********',
             'validate' => [
@@ -86,16 +89,14 @@ $form = [
     ]
 ];
 
-
 if ($_POST) {
     $sanitized_items = get_filtered_input($form);
     validate_form($form, $sanitized_items);
 }
-
 ?>
 <html>
 <head>
-    <title>PZDABALL KOMANDA</title>
+    <title>PixelPaint</title>
     <link href="assets/styles.css" rel="stylesheet">
 </head>
 <body>

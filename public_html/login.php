@@ -6,10 +6,7 @@ include '../bootloader.php';
  */
 function form_success($safe_input, &$form)
 {
-    $page = $_SERVER['PHP_SELF'];
-    header("Refresh: 5; url=$page");
-    $_SESSION['email'] = $safe_input['email'];
-    $_SESSION['password'] = $safe_input['password'];
+    App\App::$session->login($safe_input['email'], $safe_input['password']);
 }
 
 $form = [
@@ -65,7 +62,7 @@ if ($_POST) {
 ?>
 <html>
 <head>
-    <title>PZDABALL KOMANDA</title>
+    <title>PixelPaint</title>
     <link href="assets/styles.css" rel="stylesheet">
 </head>
 <body>

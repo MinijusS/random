@@ -1,6 +1,12 @@
 <?php
 include '../bootloader.php';
 
+$current_user = App\App::$session->getUser();
+$pixels = App\App::$db->getRowsWhere('pixels');
+$users = App\App::$db->getRowsWhere('users');
+
+$point_price = 5;
+
 function form_success($safe_input, &$form)
 {
     $condition = [
@@ -15,8 +21,8 @@ function form_success($safe_input, &$form)
         'user' => $_SESSION['email']
     ];
 
-    if ($existing_pixels = App\App::$db->getRowsWhere('pixels', $condition)) {
-        $existing_pixel_id = array_key_first($existing_pixels);
+    if ($existing_pixel = App\App::$db->getRowWhere('pixels', $condition)) {
+        $existing_pixel_id = array_key_first($existing_pixel);
         App\App::$db->updateRow('pixels', $existing_pixel_id, $row);
     } else {
         App\App::$db->insertRow('pixels', $row);
@@ -79,31 +85,46 @@ $form = [
         ]
     ],
     'validators' => [
-        'validate_pixel'
+        'validate_pixel',
+        'validate_points' => [
+            'points' => $point_price
+        ]
     ],
     'callbacks' => [
         'success' => 'form_success',
     ]
 ];
 
+$table = [
+    'thead' => [
+        'Username',
+        'Email',
+        'Points'
+    ],
+    'tbody' => []
+];
+
+foreach ($users as $user) {
+    unset($user['password']);
+    unset($user['admin']);
+    $table['tbody'][] = $user;
+}
+
 $h1 = "Jus esate neprisijunges!";
 
-if ($_POST && $is_logged_in) {
+if ($_POST && $current_user) {
     $sanitized_items = get_filtered_input($form);
     validate_form($form, $sanitized_items);
 }
-
-$pixels = App\App::$db->getRowsWhere('pixels');
-
 ?>
 <html>
 <head>
-    <title>Formos</title>
+    <title>PixelPaint</title>
     <link href="assets/styles.css" rel="stylesheet">
 </head>
 <body>
 <?php include '../app/templates/nav.tpl.php'; ?>
-<section>
+<section class="first-section">
     <div class="pixels-box">
         <?php foreach ($pixels ?? [] as $pixel): ?>
             <div class="pixel tooltip"
@@ -112,15 +133,31 @@ $pixels = App\App::$db->getRowsWhere('pixels');
             </div>
         <?php endforeach; ?>
     </div>
+    <?php if ($current_user): ?>
+        <section class="right-panel">
+            <h2>Tavo turimi taskai: <span class="error"><?php print $current_user['points']; ?></span></h2>
+            <span>(1 pixel costs <?php print $point_price; ?> points)</span>
+            <?php if ($current_user['points'] <= $point_price): ?>
+                <a class="btn btn-primary buy" href="/buypoints.php">Nusipirkti dar tasku</a>
+            <?php endif; ?>
+            <section>
+                <?php include '../core/templates/form.tpl.php'; ?>
+            </section>
+        </section>
+        <?php if ($current_user && $current_user['admin']): ?>
+            <section class="admin">
+                <h2>Admin Panel</h2>
+                <?php include ROOT . '/core/templates/table.tpl.php'; ?>
+            </section>
+        <?php endif; ?>
+    <?php else: ?>
+        <section>
+            <h1><?php print $h1; ?></h1>
+        </section>
+    <?php endif; ?>
 </section>
-<?php if ($is_logged_in): ?>
-    <section>
-        <?php include '../core/templates/form.tpl.php'; ?>
-    </section>
-<?php else: ?>
-    <section>
-        <h1><?php print $h1; ?></h1>
-    </section>
-<?php endif; ?>
+<footer>
+
+</footer>
 </body>
 </html>

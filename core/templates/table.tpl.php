@@ -15,7 +15,7 @@
     </tbody>
     <tfoot>
     <?php foreach ($table['tfoot'] ?? [] as $tfoot_value): ?>
-        <th><?php print $tfoot_value; ?>%</th>
+        <th><?php print $tfoot_value; ?></th>
     <?php endforeach; ?>
     </tfoot>
 </table>

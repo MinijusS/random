@@ -50,8 +50,7 @@ function validate_text_length($field_input, array &$field, array $params): bool
  */
 function validate_login(array $safe_input, array &$form)
 {
-    if ($users = App\App::$db->getRowsWhere('users', ['email' => $safe_input['email']])) {
-        $user = reset($users);
+    if ($user = App\App::$db->getRowWhere('users', ['email' => $safe_input['email']])) {
         if (crypt($safe_input['password'], HASH_SALT) == $user['password']) {
             // if password is correct
             $form['success'] = 'Sekmingai prisijungete!';
@@ -64,6 +63,58 @@ function validate_login(array $safe_input, array &$form)
         }
     } else {
         $form['error'] = 'Tokio vartotojo nera!';
+
         return false;
+    }
+}
+
+/**
+ * F-cija, tikrinanti pixeli (ar toje vietoje yra esamo userio pixelis)
+ * @param array $safe_input
+ * @param array $form
+ * @return bool
+ */
+function validate_pixel(array $safe_input, array &$form): bool
+{
+    $conditions = [
+        'x' => $safe_input['x'],
+        'y' => $safe_input['y'],
+    ];
+
+    if ($pixel = App\App::$db->getRowWhere('pixels', $conditions)) {
+        if ($pixel['user'] != $_SESSION['email']) {
+            $form['error'] = 'Negalima overridinti ne savo pixelio!';
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * F-cija, tikrinanti ar prisijunges vartotojas turi pakankamai tasku
+ * @param array $safe_input
+ * @param array $form
+ * @param array $params
+ * @return bool
+ */
+function validate_points(array $safe_input, array &$form, array $params): bool
+{
+    if ($users = App\App::$db->getRowsWhere('users', ['email' => $_SESSION['email'] ?? ''])) {
+        $current_user_id = array_key_first($users);
+        $current_user = $users[$current_user_id];
+
+        if ($current_user['points'] >= $params['points']) {
+            //Removing points from user
+            $current_user['points'] -= $params['points'];
+            App\App::$db->updateRow('users', $current_user_id, $current_user);
+
+            return true;
+        } else {
+            $form['error'] = 'Neturi pakankamai tasku, kad isigytum ar pakeistum pixeli!';
+
+            return false;
+        }
     }
 }
