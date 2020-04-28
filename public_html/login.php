@@ -69,8 +69,8 @@ if ($_POST) {
 <?php if (isset($_SESSION['email'])): ?>
     <?php header("Location: /"); ?>
 <?php else: ?>
-    <?php include '../app/templates/nav.tpl.php'; ?>
-    <?php include '../core/templates/form.tpl.php'; ?>
+    <?php include ROOT . '/app/templates/nav.tpl.php'; ?>
+    <?php include ROOT . '/core/templates/form.tpl.php'; ?>
 <?php endif; ?>
 </body>
 </html>

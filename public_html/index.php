@@ -1,4 +1,7 @@
 <?php
+
+use App\Pixels\Pixel;
+
 include '../bootloader.php';
 
 $current_user = App\App::$session->getUser();
@@ -18,14 +21,16 @@ function form_success($safe_input, &$form)
         'x' => $safe_input['x'],
         'y' => $safe_input['y'],
         'color' => $safe_input['color'],
-        'user' => $_SESSION['email']
+        'email' => $_SESSION['email']
     ];
+
+    $pixel = new Pixel($row);
 
     if ($existing_pixel = App\App::$db->getRowWhere('pixels', $condition)) {
         $existing_pixel_id = array_key_first($existing_pixel);
-        App\App::$db->updateRow('pixels', $existing_pixel_id, $row);
+        App\App::$db->updateRow('pixels', $existing_pixel_id, $pixel->getData());
     } else {
-        App\App::$db->insertRow('pixels', $row);
+        App\App::$db->insertRow('pixels', $pixel->getData());
     }
 
     header("Location: /");
@@ -99,7 +104,8 @@ $table = [
     'thead' => [
         'Username',
         'Email',
-        'Points'
+        'Points',
+        'Edit'
     ],
     'tbody' => []
 ];
@@ -107,6 +113,7 @@ $table = [
 foreach ($users as $user) {
     unset($user['password']);
     unset($user['admin']);
+    $user['edit'] = 'Edit';
     $table['tbody'][] = $user;
 }
 
@@ -123,13 +130,13 @@ if ($_POST && $current_user) {
     <link href="assets/styles.css" rel="stylesheet">
 </head>
 <body>
-<?php include '../app/templates/nav.tpl.php'; ?>
+<?php include ROOT . '/app/templates/nav.tpl.php'; ?>
 <section class="first-section">
     <div class="pixels-box">
         <?php foreach ($pixels ?? [] as $pixel): ?>
             <div class="pixel tooltip"
                  style="left: <?php print $pixel['x']; ?>;top: <?php print $pixel['y']; ?>; background-color: <?php print $pixel['color']; ?>;">
-                <span class="tooltiptext"><?php print $pixel['user']; ?></span>
+                <span class="tooltiptext"><?php print $pixel['email']; ?></span>
             </div>
         <?php endforeach; ?>
     </div>
@@ -141,7 +148,7 @@ if ($_POST && $current_user) {
                 <a class="btn btn-primary buy" href="/buypoints.php">Nusipirkti dar tasku</a>
             <?php endif; ?>
             <section>
-                <?php include '../core/templates/form.tpl.php'; ?>
+                <?php include ROOT . '/core/templates/form.tpl.php'; ?>
             </section>
         </section>
         <?php if ($current_user && $current_user['admin']): ?>

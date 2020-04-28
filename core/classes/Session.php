@@ -52,7 +52,7 @@ class Session
     /**
      * @return array returns user information
      */
-    public function getUser(): array
+    public function getUser(): ?array
     {
         return $this->user;
     }
@@ -60,13 +60,14 @@ class Session
 
     /**
      * Logout user (Destroys session)
+     * @param null $redirect
      */
     public function logout($redirect = null)
     {
         $_SESSION = [];
         session_destroy();
 
-        if($redirect) {
+        if ($redirect) {
             header("Location: $redirect");
         }
     }

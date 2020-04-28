@@ -100,7 +100,7 @@ if ($_POST) {
     <link href="assets/styles.css" rel="stylesheet">
 </head>
 <body>
-<?php include '../app/templates/nav.tpl.php'; ?>
-<?php include '../core/templates/form.tpl.php'; ?>
+<?php include ROOT . '/app/templates/nav.tpl.php'; ?>
+<?php include ROOT . '/core/templates/form.tpl.php'; ?>
 </body>
 </html>

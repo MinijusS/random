@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 session_start();
 
 define('ROOT', __DIR__);
-define ('DB_FILE', ROOT . '/app/data/db.json');
+define('DB_FILE', ROOT . '/app/data/db.json');
 define('HASH_SALT', '$2a$07$minijusavickaszjbszjbs$');
 
 //Loading core functions

@@ -190,15 +190,13 @@ th {
 
 .tooltip .tooltiptext {
     visibility: hidden;
-    width: 120px;
     background-color: #2d3436;
     color: #fff;
     text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
+    border-radius: 5px;
+    padding: 5px;
     position: absolute;
-    z-index: 1;
-    top: 20px;
+    z-index: 1000;
     left: 20px;
 }
 
