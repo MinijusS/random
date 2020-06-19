@@ -1,11 +1,13 @@
-<div class="box">
-    <?php if (isset($form['error'])): ?>
-        <span class="error-label"><?php print $form['error']; ?></span>
-    <?php elseif (isset($form['success'])): ?>
-        <span class="success-label"><?php print $form['success']; ?></span>
-    <?php endif; ?>
-    <form <?php print html_attr(($form['attr'] ?? []) + ['method' => 'POST']); ?>>
-        <?php foreach ($form['fields'] ?? [] as $field_id => $field): ?>
+<?php if (isset($data['error'])): ?>
+    <span class="error-label"><?php print $data['error']; ?></span>
+<?php elseif (isset($data['success'])): ?>
+    <span class="success-label"><?php print $data['success']; ?></span>
+<?php endif; ?>
+<form <?php print html_attr(($data['attr'] ?? []) + ['method' => 'POST']); ?>>
+    <?php foreach ($data['fields'] ?? [] as $field_id => $field): ?>
+        <?php if ($field['type'] == 'hidden'): ?>
+            <input <?php print input_attr($field, $field_id); ?>>
+        <?php else: ?>
             <div class="field" <?php print html_attr(($field['extras']['attr'] ?? [])); ?>>
                 <label>
                     <span><?php print $field['label']; ?></span>
@@ -34,35 +36,11 @@
                     <?php endif; ?>
                 </label>
             </div>
-        <?php endforeach; ?>
-        <?php foreach ($form['buttons'] ?? [] as $button_index => $button): ?>
-            <button <?php print button_attr($button); ?>>
-                <?php print $button['title']; ?>
-            </button>
-        <?php endforeach; ?>
-    </form>
-</div>
-
-<script>
-    const select = document.querySelector('select');
-    const username = document.querySelector('input[name="username"]');
-    const password = document.querySelector('input[name="password"]');
-    const button = document.querySelector('.join_btn');
-
-    button.className = 'hidden';
-    username.parentElement.parentElement.className = 'hidden';
-    password.parentElement.parentElement.className = 'hidden';
-
-    if (select.value != 'Pasirinkite komanda') {
-        button.className = 'field';
-        username.parentElement.parentElement.className = 'field';
-        password.parentElement.parentElement.className = 'field';
-    } else {
-        select.addEventListener('change', function (event) {
-            username.parentElement.parentElement.className = (this.value != false || this.value == 0) ? 'field' : 'hidden';
-            password.parentElement.parentElement.className = (this.value != false || this.value == 0) ? 'field' : 'hidden';
-            button.className = (this.value != false || this.value == 0) ? 'field' : 'hidden';
-        })
-    }
-    ;
-</script>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    <?php foreach ($data['buttons'] ?? [] as $button_index => $button): ?>
+        <button <?php print button_attr($button, $button_index); ?>>
+            <?php print $button['title']; ?>
+        </button>
+    <?php endforeach; ?>
+</form>

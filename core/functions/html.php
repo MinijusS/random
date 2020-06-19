@@ -130,12 +130,12 @@ function option_attr(array $field, $option_id)
  * @param array $field siunciame viena is fieldu
  * @return string graziname kita funkcija
  */
-function button_attr(array $field)
+function button_attr(array $field, $button_id)
 {
     return html_attr(
         ($field['extras']['attr'] ?? []) +
         [
             'name' => 'action',
-            'value' => $field['value']
+            'value' => $button_id
         ]);
 }

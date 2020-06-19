@@ -82,3 +82,12 @@ function validate_form(array &$form, array $safe_input): bool
 
     return $success;
 }
+
+function get_form_action($form)
+{
+    if (isset($form['action'])) {
+        return $form['action'];
+    } else {
+        return null;
+    }
+}

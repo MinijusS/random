@@ -3,6 +3,7 @@
 namespace Core;
 
 use \App\App;
+use \App\Users\User;
 
 class Session
 {
@@ -43,20 +44,21 @@ class Session
             'password' => crypt($password, HASH_SALT)
         ];
 
-        if ($this->user = App::$db->getRowWhere('users', $conditions)) {
+        if ($user_info = App::$db->getRowWhere('users', $conditions)) {
             $_SESSION['email'] = $email;
             $_SESSION['password'] = $password;
+            $this->user = new User($user_info);
         }
+
     }
 
     /**
-     * @return array returns user information
+     * @return User|null
      */
-    public function getUser(): ?array
+    public function getUser(): ?User
     {
         return $this->user;
     }
-
 
     /**
      * Logout user (Destroys session)
@@ -69,6 +71,15 @@ class Session
 
         if ($redirect) {
             header("Location: $redirect");
+        }
+    }
+
+    public function userIs($role)
+    {
+        if ($this->user) {
+            if($this->user->getRole() == $role) {
+                return true;
+            }
         }
     }
 }

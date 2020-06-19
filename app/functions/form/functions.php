@@ -82,7 +82,7 @@ function validate_pixel(array $safe_input, array &$form): bool
     ];
 
     if ($pixel = App\App::$db->getRowWhere('pixels', $conditions)) {
-        if ($pixel['user'] != $_SESSION['email']) {
+        if ($pixel['email'] != $_SESSION['email']) {
             $form['error'] = 'Negalima overridinti ne savo pixelio!';
 
             return false;
@@ -118,3 +118,4 @@ function validate_points(array $safe_input, array &$form, array $params): bool
         }
     }
 }
+

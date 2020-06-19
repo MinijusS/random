@@ -1,128 +1,59 @@
 <?php
 
+use App\Cart\Item;
 use App\Pixels\Pixel;
+use Core\Views\Catalog;
+use Core\Views\Form;
+use Core\Views\Table;
+use App\Users\User;
+use Core\View;
 
 include '../bootloader.php';
-
-$current_user = App\App::$session->getUser();
-$pixels = App\App::$db->getRowsWhere('pixels');
-$users = App\App::$db->getRowsWhere('users');
-
-$point_price = 5;
-
-function form_success($safe_input, &$form)
+function add_success($safe_input, $form)
 {
-    $condition = [
-        'x' => $safe_input['x'],
-        'y' => $safe_input['y']
-    ];
-
-    $row = [
-        'x' => $safe_input['x'],
-        'y' => $safe_input['y'],
-        'color' => $safe_input['color'],
-        'email' => $_SESSION['email']
-    ];
-
-    $pixel = new Pixel($row);
-
-    if ($existing_pixel = App\App::$db->getRowWhere('pixels', $condition)) {
-        $existing_pixel_id = array_key_first($existing_pixel);
-        App\App::$db->updateRow('pixels', $existing_pixel_id, $pixel->getData());
-    } else {
-        App\App::$db->insertRow('pixels', $pixel->getData());
-    }
-
-    header("Location: /");
+    $safe_input['user_id'] = \App\App::$session->getUser()->getId();
+    $safe_input['status'] = Item::STATUS_IN_CART;
+    \App\Cart\Model::insert(new Item($safe_input));
 }
 
-$form = [
-    'attr' => [
-        'action' => '/',
-        'method' => 'POST',
-        'class' => 'my-form',
-        'id' => 'buy_pixel'
+$user = \App\App::$session->getUser();
+$drinks = \App\Drinks\Model::getWhere([]);
+
+$add_form = [
+    'callbacks' => [
+        'success' => 'add_success',
     ],
     'fields' => [
-        'x' => [
-            'label' => 'X Reiksme',
-            'type' => 'number',
-            'placeholder' => '200',
-            'validate' => [
-                'validate_not_empty',
-                'validate_is_number',
-                'validate_number_range' => [
-                    'min' => 0,
-                    'max' => 500,
-                ]
-            ]
+        'drink_id' => [
+            'type' => 'hidden'
         ],
-        'y' => [
-            'label' => 'Y Reiksme',
-            'type' => 'number',
-            'placeholder' => '300',
-            'validate' => [
-                'validate_not_empty',
-                'validate_is_number',
-                'validate_number_range' => [
-                    'min' => 0,
-                    'max' => 500,
-                ]
-            ]
-        ],
-        'color' => [
-            'label' => 'Pixelio spalva',
-            'type' => 'color',
-            'validate' => [
-
-            ]
-        ]
     ],
     'buttons' => [
         'submit' => [
-            'title' => 'Pirkti pixeli',
-            'value' => 'submit',
-            'extras' => [
-                'attr' => [
-                    'class' => 'buy'
-                ]
-            ]
-        ]
+            'title' => 'Add to cart',
+        ],
     ],
-    'validators' => [
-        'validate_pixel',
-        'validate_points' => [
-            'points' => $point_price
-        ]
-    ],
-    'callbacks' => [
-        'success' => 'form_success',
-    ]
 ];
 
-$table = [
-    'thead' => [
-        'Username',
-        'Email',
-        'Points',
-        'Edit'
-    ],
-    'tbody' => []
-];
-
-foreach ($users as $user) {
-    unset($user['password']);
-    unset($user['admin']);
-    $user['edit'] = 'Edit';
-    $table['tbody'][] = $user;
+$catalog_data = [];
+foreach ($drinks as $drink_id => $drink) {
+    $catalog_item = ['drink' => $drink];
+    if ($user) {
+        $add_form['fields']['drink_id']['value'] = $drink->id;
+        $catalog_item['form'] = new Form($add_form);
+    }
+    $catalog_data[] = $catalog_item;
 }
 
-$h1 = "Jus esate neprisijunges!";
-
-if ($_POST && $current_user) {
-    $sanitized_items = get_filtered_input($form);
-    validate_form($form, $sanitized_items);
+if ($_POST && \App\App::$session->userIs(User::ROLE_USER)) {
+    $sanitized_items = get_filtered_input($add_form);
+    validate_form($add_form, $sanitized_items);
 }
+
+$catalog = new Catalog($catalog_data);
+
+
+
 ?>
 <html>
 <head>
@@ -130,41 +61,8 @@ if ($_POST && $current_user) {
     <link href="assets/styles.css" rel="stylesheet">
 </head>
 <body>
-<?php include ROOT . '/app/templates/nav.tpl.php'; ?>
-<section class="first-section">
-    <div class="pixels-box">
-        <?php foreach ($pixels ?? [] as $pixel): ?>
-            <div class="pixel tooltip"
-                 style="left: <?php print $pixel['x']; ?>;top: <?php print $pixel['y']; ?>; background-color: <?php print $pixel['color']; ?>;">
-                <span class="tooltiptext"><?php print $pixel['email']; ?></span>
-            </div>
-        <?php endforeach; ?>
-    </div>
-    <?php if ($current_user): ?>
-        <section class="right-panel">
-            <h2>Tavo turimi taskai: <span class="error"><?php print $current_user['points']; ?></span></h2>
-            <span>(1 pixel costs <?php print $point_price; ?> points)</span>
-            <?php if ($current_user['points'] <= $point_price): ?>
-                <a class="btn btn-primary buy" href="/buypoints.php">Nusipirkti dar tasku</a>
-            <?php endif; ?>
-            <section>
-                <?php include ROOT . '/core/templates/form.tpl.php'; ?>
-            </section>
-        </section>
-        <?php if ($current_user && $current_user['admin']): ?>
-            <section class="admin">
-                <h2>Admin Panel</h2>
-                <?php include ROOT . '/core/templates/table.tpl.php'; ?>
-            </section>
-        <?php endif; ?>
-    <?php else: ?>
-        <section>
-            <h1><?php print $h1; ?></h1>
-        </section>
-    <?php endif; ?>
-</section>
-<footer>
 
-</footer>
+<?php include ROOT . '/app/templates/nav.tpl.php'; ?>
+<?php print $catalog->render(); ?>
 </body>
 </html>

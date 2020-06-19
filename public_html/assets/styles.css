@@ -1,4 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -26,20 +32,42 @@ nav a {
     margin-right: 20px;
 }
 
-form {
+.my-form {
     padding: 20px;
     background-color:#dfe6e9;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
+    width: 400px;
 }
 
-form>* {
+.my-form>* {
     margin: 10px;
+}
+
+.mini-form {
+    margin: 0;
 }
 
 section {
     margin-top: 20px;
+}
+
+.catalog {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 20px;
+}
+
+.product-card .wrapper-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-image {
+    height: 100px;
 }
 
 input, textarea, select {
@@ -120,10 +148,31 @@ button {
     cursor: pointer;
 }
 
-table, td, th {
-    border: dashed 1px #dfe6e9;
+table {
+    border-collapse: collapse;
+}
+
+.btn {
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.btn-edit {
+    background-color: #00b894;
+}
+
+.btn-delete {
+    background-color: #ff7675;
+}
+
+td, th {
+    padding: 10px;
+    border-bottom: solid 1px #dfe6e9;
     text-align: center;
 }
+
 th {
     font-size: 20px;
 }
@@ -163,20 +212,13 @@ th {
     height: 200px;
 }
 
-.btn {
-    padding: 10px;
-    text-decoration: none;
-    color: white;
-    border-radius: 5px;
-}
-
 .btn-primary {
     background-color: #00b894;
 }
 
 .pixels-box {
-    width: 500px;
-    height: 500px;
+    width: 510px;
+    height: 510px;
     position: relative;
     background-color: #f4fcff;
 }

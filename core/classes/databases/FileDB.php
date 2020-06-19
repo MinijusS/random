@@ -167,6 +167,7 @@ class FileDB
      */
     public function rowExists(string $table_name, $row_id): bool
     {
+
         if (isset($this->data[$table_name][$row_id])) {
             return true;
         }
@@ -218,7 +219,7 @@ class FileDB
     public function getRowById(string $table_name, $row_id)
     {
         if ($this->rowExists($table_name, $row_id)) {
-            return $this->data[$table_name][$row_id];
+            return ['id' => $row_id] + $this->data[$table_name][$row_id];
         }
 
         return false;
@@ -242,6 +243,7 @@ class FileDB
                 }
             }
             if ($match) {
+                $row['id'] = $row_id;
                 $result[$row_id] = $row;
             }
         }

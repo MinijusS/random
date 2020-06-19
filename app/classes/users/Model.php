@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Users;
+
+use App\App;
+
+class Model
+{
+    const TABLE = 'users';
+
+    public static function insert(User $user)
+    {
+        App::$db->insertRow(self::TABLE, $user->_getData());
+    }
+
+    public static function getWhere(array $conditions = [])
+    {
+        $rows = App::$db->getRowsWhere(self::TABLE, $conditions);
+        $users = [];
+
+        foreach ($rows as $row) {
+            $users[] = new User($row);
+        }
+
+        return $users;
+    }
+
+    public static function get(int $id): ?User
+    {
+        if ($row = App::$db->getRowById(self::TABLE, $id)) {
+            return new User($row);
+        } else {
+            return null;
+        }
+    }
+
+    public static function update(User $user)
+    {
+        App::$db->updateRow(self::TABLE, $user->getId(), $user->_getData());
+    }
+
+    public static function delete(User $user)
+    {
+        App::$db->deleteRow(self::TABLE, $user->getId());
+    }
+
+    public static function deleteById(int $id)
+    {
+        App::$db->deleteRow(self::TABLE, $id);
+    }
+
+}

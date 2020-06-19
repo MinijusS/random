@@ -24,7 +24,6 @@ class App
     public function __destruct()
     {
         self::$db->save();
-        // TODO: Implement __destruct() method.
     }
 
 }

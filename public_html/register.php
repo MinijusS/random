@@ -1,4 +1,8 @@
 <?php
+
+use \App\Users\User;
+use Core\View;
+
 include '../bootloader.php';
 
 /**
@@ -6,13 +10,13 @@ include '../bootloader.php';
  */
 function form_success($safe_input, &$form)
 {
-    unset($safe_input['password_repeat']);
     $hashed_password = crypt($safe_input['password'], HASH_SALT);
-    $safe_input['password'] = $hashed_password;
-    $safe_input['points'] = 100;
-    $safe_input['admin'] = false;
 
-    App\App::$db->insertRow('users', $safe_input);
+    $user = new User($safe_input);
+    $user->setPassword($hashed_password);
+    $user->setPoints(500);
+    $user->setRole(User::ROLE_USER);
+    \App\Users\Model::insert($user);
 
     $form['success'] = 'Vartotojas sekmingai pridetas!';
 
@@ -93,6 +97,8 @@ if ($_POST) {
     $sanitized_items = get_filtered_input($form);
     validate_form($form, $sanitized_items);
 }
+$form = new View($form);
+
 ?>
 <html>
 <head>
@@ -101,6 +107,6 @@ if ($_POST) {
 </head>
 <body>
 <?php include ROOT . '/app/templates/nav.tpl.php'; ?>
-<?php include ROOT . '/core/templates/form.tpl.php'; ?>
+<?php print $form->render(ROOT . '/core/templates/form.tpl.php'); ?>
 </body>
 </html>
