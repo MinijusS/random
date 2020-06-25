@@ -71,12 +71,24 @@ class Form extends \Core\Abstracts\Views\Form
     {
         if (isset($this->data['buttons'])) {
             foreach ($this->data['buttons'] as $button_id => $button_value) {
-                if ($_POST['action'] ?? '' === $button_id) {
+                if (self::getSubmitAction() === $button_id) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    public function setMessage($message)
+    {
+        switch ($message) {
+            case 'valid_register':
+                $this->data['success'] = 'Vartotojas sekmingai sukurtas!';
+                break;
+            case 'invalid_register':
+                $this->data['fail'] = 'Vartotojas nesukurtas!';
+                break;
+        }
     }
 
     /**
@@ -94,7 +106,7 @@ class Form extends \Core\Abstracts\Views\Form
             return $_POST ?: null;
         } else {
             $filter_params = [];
-            foreach ($this->data['fields'] as $field_id => $field) {
+            foreach ($this->data['fields'] ?? [] as $field_id => $field) {
                 $filter_params[$field_id] = $field['filter'] ?? FILTER_SANITIZE_SPECIAL_CHARS;
             }
             return filter_input_array(INPUT_POST, $filter_params);

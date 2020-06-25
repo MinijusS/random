@@ -6,16 +6,12 @@
     </thead>
     <tbody>
     <?php foreach ($data['tbody'] ?? [] as $trow): ?>
-        <tr>
+        <tr class="<?php print $trow['class'] ?? ''; ?>">
+            <?php unset($trow['class']); ?>
             <?php foreach ($trow ?? [] as $tcol_value): ?>
                 <td><?php print  $tcol_value; ?></td>
             <?php endforeach; ?>
         </tr>
     <?php endforeach; ?>
     </tbody>
-    <tfoot>
-    <?php foreach ($data['tfoot'] ?? [] as $tfoot_value): ?>
-        <th><?php print $tfoot_value; ?></th>
-    <?php endforeach; ?>
-    </tfoot>
 </table>

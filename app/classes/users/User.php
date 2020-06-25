@@ -58,22 +58,6 @@ class User extends DataHolder
     }
 
     /**
-     * @param int $value
-     */
-    public function setPoints(int $value): void
-    {
-        $this->points = $value;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getPoints(): ?int
-    {
-        return $this->points ?? null;
-    }
-
-    /**
      * @param int $role
      */
     public function setRole(int $role): void

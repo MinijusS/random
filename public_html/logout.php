@@ -1,4 +1,4 @@
 <?php
 include '../bootloader.php';
-\App\App::$session->logout('/login.php');
 
+(new \App\Controllers\Auth\LogoutController())->index();

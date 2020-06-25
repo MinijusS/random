@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Cart;
+namespace App\Cart\Items;
 
 use App\Users\User;
 use App\Drinks\Drink;

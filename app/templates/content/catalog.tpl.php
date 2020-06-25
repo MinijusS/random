@@ -1,5 +1,6 @@
+<h1><?php print $data['h1'];?> </h1>
 <section class="catalog">
-    <?php foreach ($data ?? [] as $catalog_item): ?>
+    <?php foreach ($data['catalog'] ?? [] as $catalog_item): ?>
         <div class="product-card">
             <div class="wrapper-card">
                 <img src="<?php print $catalog_item['drink']->getPhoto(); ?>" class="product-image">
@@ -9,7 +10,7 @@
                 <p>Likutis: <?php print $catalog_item['drink']->getStorage(); ?></p>
             </div>
             <?php if (isset($catalog_item['form'])): ?>
-                <?php print $catalog_item['form']->render(); ?>
+                <?php print $catalog_item['form']; ?>
             <?php endif; ?>
         </div>
     <?php endforeach; ?>
