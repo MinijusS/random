@@ -7,7 +7,7 @@ class LoginForm extends \Core\Views\Form
     {
         $form = [
             'attr' => [
-                'action' => '/login.php',
+                'action' => '/login',
                 'method' => 'POST',
                 'class' => 'my-form',
                 'id' => 'login_form'

@@ -18,3 +18,5 @@ require 'app/functions/form/functions.php';
 require 'vendor/autoload.php';
 
 $app = new App\App();
+
+require 'app/config/routes.php';

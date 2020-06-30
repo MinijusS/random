@@ -1,4 +1,5 @@
 <?php
+
 namespace Core;
 
 
@@ -26,7 +27,11 @@ class Router extends \Core\Abstracts\Router
      */
     public static function add(string $name, string $url, string $controller_name, string $controller_method): void
     {
-        // TODO: Implement add() method.
+        self::$routes[$name] = [
+            'url' => $url,
+            'controller_name' => $controller_name,
+            'controller_method' => $controller_method
+        ];
     }
 
     /**
@@ -37,7 +42,7 @@ class Router extends \Core\Abstracts\Router
      */
     protected static function getControllerInstance(string $controller_name)
     {
-        // TODO: Implement getControllerInstance() method.
+        return new $controller_name();
     }
 
     /**
@@ -49,7 +54,13 @@ class Router extends \Core\Abstracts\Router
      */
     protected static function getRouteByUrl($url): ?array
     {
-        // TODO: Implement getRouteByUrl() method.
+        foreach (self::$routes as $route) {
+            if($route['url'] === $url) {
+                return $route;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -61,7 +72,7 @@ class Router extends \Core\Abstracts\Router
      */
     protected static function getUrl($name): ?string
     {
-        // TODO: Implement getUrl() method.
+        return self::$routes[$name]['url'] ?? null;
     }
 
     /**
@@ -77,7 +88,15 @@ class Router extends \Core\Abstracts\Router
      */
     public static function run(): string
     {
-        // TODO: Implement run() method.
-    }
+        $route = self::getRouteByUrl(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        if ($route) {
+            $controller = self::getControllerInstance($route['controller_name']);
+            $method = $route['controller_method'];
 
+            return $controller->$method();
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            exit;
+        }
+    }
 }

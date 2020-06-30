@@ -35,7 +35,7 @@ class OrdersController extends BaseController
         $matched_items = \App\Cart\Orders\Model::getWhere([]);
         foreach ($matched_items as $matched_item) {
             $view = new Link([
-                'url' => "/admin/orders/view.php?id={$matched_item->getId()}",
+                'url' => "/admin/orders/view?id={$matched_item->getId()}",
                 'title' => 'Perziureti',
                 'attr' => [
                     'class' => 'btn btn-edit'
@@ -86,7 +86,7 @@ class OrdersController extends BaseController
             $order = \App\Cart\Orders\Model::get($_GET['id']);
             $order->setStatus($safe_input['select']);
             \App\Cart\Orders\Model::update($order);
-            header("Location: /admin/orders/index.php");
+            header("Location: /admin/orders/");
         }
 
         $order = \App\Cart\Orders\Model::get($_GET['id']);

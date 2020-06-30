@@ -68,7 +68,7 @@ class LoginController extends \App\Controllers\BaseController
             $safe_input = $form->getSubmitData();
             App::$session->login($safe_input['email'], $safe_input['password']);
 
-            header('Location: /index.php');
+            header('Location: /');
         }
         $content = new \App\Views\Content(['h1' => 'Prisijungti', 'form' => $form->render()]);
         $this->page->setContent($content->render('auth/login.tpl.php'));

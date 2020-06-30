@@ -53,7 +53,7 @@ class CartController extends BaseController
             $safe_input = $cancel_form->getSubmitData();
 
             \App\Cart\Items\Model::deleteById($safe_input['id']);
-            header("Location: /cart.php");
+            header("Location: /cart");
         }
 
         if($order_form->isSubmitted() && $order_form->validate()) {
@@ -77,7 +77,7 @@ class CartController extends BaseController
             }
             $order->setPrice($sum);
             \App\Cart\Orders\Model::update($order);
-            header("Location: /");
+            header("Location: /orders");
         }
 
         $content_table = new Table($catalog_table);

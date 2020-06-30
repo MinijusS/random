@@ -48,7 +48,7 @@ class OrderIndexController extends BaseController
             }
 
             $view = new Link([
-                'url' => "/orders/view.php?id={$matched_item->getId()}",
+                'url' => "/orders/view?id={$matched_item->getId()}",
                 'title' => 'Perziureti',
                 'attr' => [
                     'class' => 'btn btn-edit'

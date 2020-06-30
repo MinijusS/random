@@ -42,7 +42,7 @@ class ProductController extends \App\Controllers\BaseController
 
         foreach ($drinks as $row_id => $drink) {
             $edit = new Link([
-                'url' => "/admin/products/edit.php?id={$drink->getId()}",
+                'url' => "/admin/products/edit?id={$drink->getId()}",
                 'title' => 'Redaguoti',
                 'attr' => [
                     'class' => 'btn btn-edit'
@@ -62,7 +62,7 @@ class ProductController extends \App\Controllers\BaseController
             $safe_input = $delete_form->getSubmitData();
 
             \App\Drinks\Model::deleteById($safe_input['id']);
-            header("Location: /admin/products/view.php");
+            header("Location: /admin/products/view");
         }
 
         $catalogTable = new Table($catalog_table);
@@ -79,7 +79,7 @@ class ProductController extends \App\Controllers\BaseController
             $safe_input = $form->getSubmitData();
 
             \App\Drinks\Model::insert(new Drink($safe_input));
-            header("Location: /admin/products/view.php");
+            header("Location: /admin/products/view");
         }
         $content = new Content(['h1' => 'Prideti gerima i kataloga', 'form' => $form->render()]);
         $this->page->setContent($content->render('auth/login.tpl.php'));
@@ -103,7 +103,7 @@ class ProductController extends \App\Controllers\BaseController
                 $form->setPhoto($drink->getPhoto());
             }
             if (!($drink ?? null)) {
-                header('Location: /admin/products/view.php');
+                header('Location: /admin/products/view');
             }
         }
 
@@ -112,7 +112,7 @@ class ProductController extends \App\Controllers\BaseController
 
             $drink = new Drink($safe_input);
             \App\Drinks\Model::update($drink);
-            header("Location: /admin/products/view.php");
+            header("Location: /admin/products/view");
         }
 
         $content = new Content(['h1' => 'Atnaujinti produkta', 'form' => $form->render()]);

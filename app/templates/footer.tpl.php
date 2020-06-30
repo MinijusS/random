@@ -6,24 +6,17 @@ $footer = [
     ],
     [
         'name' => 'Register',
-        'url' => '/register.php'
+        'url' => '/register'
     ],
     [
         'name' => 'Login',
-        'url' => '/login.php'
+        'url' => '/login'
     ],
     [
         'name' => 'Logout',
-        'url' => '/logout.php',
+        'url' => '/logout',
     ]
 ];
-
-if(isset($_SESSION['email'])) {
-    unset($nav[1]);
-    unset($nav[2]);
-} else {
-    unset($nav[3]);
-}
 
 ?>
 
